@@ -16,7 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
 //Project imports
-import visualizealgorithms.bll.algorithm.sorting.BubbleSort;
+import visualizealgorithms.bll.algorithm.sorting.*;
 import visualizealgorithms.bll.algorithm.IAlgorithm;
 import visualizealgorithms.util.NumberGenerator;
 
@@ -42,6 +42,7 @@ public class MainWindowController implements Initializable {
         });
 
         lvAlgorithms.getItems().add(new BubbleSort());
+        lvAlgorithms.getItems().add(new InsertionSort());        
         //add other algorithms
     }
 
@@ -113,8 +114,12 @@ public class MainWindowController implements Initializable {
             LineChart<?, ?> lineChart = buildChart();
             XYChart.Series series = new XYChart.Series();
             
-            runTask(selectedAlgorithm, ng.generateRandomNumbers(1000, 1), series);
-            runTask(selectedAlgorithm, ng.generateRandomNumbers(2000, 1), series);
+            runTask(selectedAlgorithm, ng.generateRandomNumbers(10000, 1), series);
+            runTask(selectedAlgorithm, ng.generateRandomNumbers(20000, 1), series);
+            runTask(selectedAlgorithm, ng.generateRandomNumbers(40000, 1), series);
+            runTask(selectedAlgorithm, ng.generateRandomNumbers(80000, 1), series);
+            runTask(selectedAlgorithm, ng.generateRandomNumbers(160000, 1), series);
+            
             //add more runs...
             
             //Optimizations:
