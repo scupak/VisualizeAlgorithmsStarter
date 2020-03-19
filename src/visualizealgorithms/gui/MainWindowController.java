@@ -59,6 +59,7 @@ public class MainWindowController implements Initializable {
         
         lvAlgorithms.getItems().add(new BubbleSort());
         lvAlgorithms.getItems().add(new InsertionSort());
+        lvAlgorithms.getItems().add(new QuickSort());
         //add other algorithms
     }
 
