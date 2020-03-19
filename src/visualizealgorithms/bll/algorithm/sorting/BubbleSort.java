@@ -51,6 +51,20 @@ public class BubbleSort extends GenericAlgorithm {
         
         }
 
-        
+        //algorithm implementation...
+        for (int i = 1; i < arr.length; i++) // repeat sorting phase N – 1 times
+        {
+            for (int j = 0; j < arr.length - 1; j++) {
+
+                {
+                    if (arr[j] > arr[j + 1]) // compare elements pair-wise
+                    {
+                        int tmp = arr[j]; // swap element pair
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = tmp;
+                    }
+                }
+            }
+        }
     }
 
