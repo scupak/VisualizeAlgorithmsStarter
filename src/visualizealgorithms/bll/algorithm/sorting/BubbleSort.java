@@ -50,7 +50,7 @@ public class BubbleSort extends GenericAlgorithm {
         
         
         }
-
+/*
         //algorithm implementation...
         for (int i = 1; i < arr.length; i++) // repeat sorting phase N – 1 times
         {
@@ -63,8 +63,8 @@ public class BubbleSort extends GenericAlgorithm {
                         arr[j] = arr[j + 1];
                         arr[j + 1] = tmp;
                     }
-                }
+                }*/
             }
-        }
-    }
+        
+    
 
