@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,19 +49,37 @@ public class MainWindowController implements Initializable {
         lvAlgorithms.setOnMouseClicked((event) -> {
             btnStartAction.setDisable(lvAlgorithms.getSelectionModel().getSelectedIndex() == -1);
         });
+
+        initializeInputRanges();
+
+        lvAlgorithms.getItems().add(new BubbleSort());
+        lvAlgorithms.getItems().add(new InsertionSort());
+        lvAlgorithms.getItems().add(new QuickSort());
+        //add other algorithms
+    }
+    
+    
+    /**
+     * 
+     */
+    private void initializeInputRanges() {
         
-        
+        //default ranges
         inputRanges.add(1000);
         inputRanges.add(2000);
         inputRanges.add(4000);
         inputRanges.add(8000);
         inputRanges.add(16000);
         inputRanges.add(32000);
-        
-        lvAlgorithms.getItems().add(new BubbleSort());
-        lvAlgorithms.getItems().add(new InsertionSort());
-        lvAlgorithms.getItems().add(new QuickSort());
-        //add other algorithms
+        inputRanges.add(64000);
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Integer inputRange : inputRanges) {
+            sb.append(inputRange + ";");
+        }
+
+        txtInputs.setText(sb.toString());
     }
 
     /**
@@ -73,23 +92,22 @@ public class MainWindowController implements Initializable {
      */
     private void runTask(IAlgorithm algorithm, int[] data, XYChart.Series series) {
 
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
 
         algorithm.setData(data);
         algorithm.doWork();
 
-        long endTime = System.nanoTime();
+        long endTime = System.currentTimeMillis();
 
-        long durationInNano = (endTime - startTime);
-        long elapsedTime = TimeUnit.NANOSECONDS.toMillis(durationInNano);
+        long durationInMillis = (endTime - startTime);
 
-        series.getData().add(new XYChart.Data(data.length, elapsedTime));
-
-        //create and setup XY plot
-        XYChart.Data<Number, Number> xyPlot = new XYChart.Data(data.length, elapsedTime);
-        xyPlot.setNode(new HoveredThresholdNode(data.length, elapsedTime)); //create tooltip in the chart
-        series.getData().add(xyPlot);
-
+        Platform.runLater(() -> {
+            series.getData().add(new XYChart.Data(data.length, durationInMillis));
+            //create and setup XY plot
+            XYChart.Data<Number, Number> xyPlot = new XYChart.Data(data.length, durationInMillis);
+            xyPlot.setNode(new HoveredThresholdNode(data.length, durationInMillis)); //create tooltip in the chart
+            series.getData().add(xyPlot);
+        });
     }
 
     /**
@@ -125,24 +143,32 @@ public class MainWindowController implements Initializable {
         IAlgorithm selectedAlgorithm = (IAlgorithm) lvAlgorithms.getSelectionModel().getSelectedItem();
         NumberGenerator ng = NumberGenerator.getInstance();
         getInputRangeFromGUI(); //get user defined input
+        pbProgress.setProgress(0.0);
 
         if (selectedAlgorithm != null) {
 
             LineChart<?, ?> lineChart = buildChart();
             XYChart.Series series = new XYChart.Series();
 
-            for (Integer inputRange : inputRanges) {
-                runTask(selectedAlgorithm, ng.generateRandomNumbers(inputRange, 1), series);
-            }
-            
-            
+            Thread t = new Thread(() -> {
+
+                for (int i = 0; i < inputRanges.size(); i++) {
+                    final double value = (float) (i + 1) / (float) inputRanges.size();
+                    runTask(selectedAlgorithm, ng.generateRandomNumbers(inputRanges.get(i), 1), series);
+
+                    Platform.runLater(() -> {
+                        pbProgress.setProgress(value);
+                    });
+
+                    System.out.println(value);
+                }
+            });
+            t.start();
 
             //add more runs...
             //Optimizations:
-            //FIXME: allow user to input # of elements from GUI... (1000;2000;4000;8000;16000) etc.
             //FIXME: print out precise execution times for each
             //FIXME: include support for sorting/searching BE-instances
-            //FIXME: GUI-freeze. Implement a second Thread for the algorithm and use platform.runLater()...
             lineChart.getData().add(series);
 
             rightAnchorPane.getChildren().clear();
@@ -163,7 +189,7 @@ public class MainWindowController implements Initializable {
 
         if (text.trim().length() > 0) {
             this.inputRanges.clear();
-            
+
             String[] inputRange = text.split(";");
             for (int i = 0; i < inputRange.length; i++) {
                 this.inputRanges.add(Integer.parseInt(inputRange[i]));
