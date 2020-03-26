@@ -17,10 +17,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import visualizealgorithms.bll.algorithm.AlgorithmType;
 
 //Project imports
 import visualizealgorithms.bll.algorithm.sorting.*;
 import visualizealgorithms.bll.algorithm.IAlgorithm;
+import visualizealgorithms.bll.algorithm.misc.TowerOfHanoi;
 import visualizealgorithms.util.NumberGenerator;
 
 /**
@@ -55,6 +57,7 @@ public class MainWindowController implements Initializable {
         lvAlgorithms.getItems().add(new BubbleSort());
         lvAlgorithms.getItems().add(new InsertionSort());
         lvAlgorithms.getItems().add(new QuickSort());
+        lvAlgorithms.getItems().add(new TowerOfHanoi());        
         //add other algorithms
     }
     
@@ -110,6 +113,10 @@ public class MainWindowController implements Initializable {
         });
     }
 
+    
+    
+    
+    
     /**
      *
      * @return
@@ -154,8 +161,13 @@ public class MainWindowController implements Initializable {
 
                 for (int i = 0; i < inputRanges.size(); i++) {
                     final double value = (float) (i + 1) / (float) inputRanges.size();
-                    runTask(selectedAlgorithm, ng.generateRandomNumbers(inputRanges.get(i), 1), series);
-
+                    
+                    if (selectedAlgorithm.getType() == AlgorithmType.SORTING)    
+                        runTask(selectedAlgorithm, ng.generateRandomNumbers(inputRanges.get(i), 1), series);
+                    else
+                        runTask(selectedAlgorithm, new int[]{inputRanges.get(i)}, series);
+                    
+                    
                     Platform.runLater(() -> {
                         pbProgress.setProgress(value);
                     });

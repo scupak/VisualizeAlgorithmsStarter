@@ -1,6 +1,8 @@
 
 package visualizealgorithms.bll.algorithm;
 
+import com.sun.javafx.scene.traversal.Algorithm;
+
 /**
  *
  * @author Søren Spangsberg
@@ -26,4 +28,11 @@ public interface IAlgorithm {
      * @param data 
      */
     public void setData(Object data);
+    
+    
+    /**
+     * 
+     * @return 
+     */
+    public AlgorithmType getType();
 }

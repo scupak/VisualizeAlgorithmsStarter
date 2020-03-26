@@ -1,5 +1,6 @@
 package visualizealgorithms.bll.algorithm.sorting;
 
+import visualizealgorithms.bll.algorithm.AlgorithmType;
 import visualizealgorithms.bll.algorithm.GenericAlgorithm;
 
 /**
@@ -12,7 +13,7 @@ public class InsertionSort extends GenericAlgorithm {
      * Constructor that calls super class with basic info
      */
     public InsertionSort() {
-        super("InsertionSort", "Simple O(N^2) sorting algorithm");
+        super("InsertionSort", "Simple O(N^2) sorting algorithm", AlgorithmType.SORTING);
     }
 
     /**

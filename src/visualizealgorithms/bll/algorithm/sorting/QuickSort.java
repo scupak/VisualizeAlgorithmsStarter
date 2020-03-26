@@ -1,5 +1,6 @@
 package visualizealgorithms.bll.algorithm.sorting;
 
+import visualizealgorithms.bll.algorithm.AlgorithmType;
 import visualizealgorithms.bll.algorithm.GenericAlgorithm;
 
 /**
@@ -9,7 +10,7 @@ import visualizealgorithms.bll.algorithm.GenericAlgorithm;
 public class QuickSort extends GenericAlgorithm {
 
     public QuickSort() {
-        super("QuickSort", "Fast O(n log N) recursive sorting algorithm");
+        super("QuickSort", "Fast O(n log N) recursive sorting algorithm", AlgorithmType.SORTING);
     }
 
     @Override
