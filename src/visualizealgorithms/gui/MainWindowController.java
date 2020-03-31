@@ -22,8 +22,9 @@ import visualizealgorithms.bll.algorithm.AlgorithmType;
 //Project imports
 import visualizealgorithms.bll.algorithm.sorting.*;
 import visualizealgorithms.bll.algorithm.IAlgorithm;
+import visualizealgorithms.bll.algorithm.TaskRunner;
 import visualizealgorithms.bll.algorithm.misc.TowerOfHanoi;
-import visualizealgorithms.util.NumberGenerator;
+import visualizealgorithms.util.DataGenerator;
 
 /**
  *
@@ -57,16 +58,15 @@ public class MainWindowController implements Initializable {
         lvAlgorithms.getItems().add(new BubbleSort());
         lvAlgorithms.getItems().add(new InsertionSort());
         lvAlgorithms.getItems().add(new QuickSort());
-        lvAlgorithms.getItems().add(new TowerOfHanoi());        
+        lvAlgorithms.getItems().add(new TowerOfHanoi());
         //add other algorithms
     }
-    
-    
+
     /**
-     * 
+     *
      */
     private void initializeInputRanges() {
-        
+
         //default ranges
         inputRanges.add(1000);
         inputRanges.add(2000);
@@ -93,30 +93,6 @@ public class MainWindowController implements Initializable {
      * @param data
      * @param series
      */
-    private void runTask(IAlgorithm algorithm, int[] data, XYChart.Series series) {
-
-        long startTime = System.currentTimeMillis();
-
-        algorithm.setData(data);
-        algorithm.doWork();
-
-        long endTime = System.currentTimeMillis();
-
-        long durationInMillis = (endTime - startTime);
-
-        Platform.runLater(() -> {
-            series.getData().add(new XYChart.Data(data.length, durationInMillis));
-            //create and setup XY plot
-            XYChart.Data<Number, Number> xyPlot = new XYChart.Data(data.length, durationInMillis);
-            xyPlot.setNode(new HoveredThresholdNode(data.length, durationInMillis)); //create tooltip in the chart
-            series.getData().add(xyPlot);
-        });
-    }
-
-    
-    
-    
-    
     /**
      *
      * @return
@@ -148,7 +124,9 @@ public class MainWindowController implements Initializable {
     @FXML
     private void handleStartAction(ActionEvent event) {
         IAlgorithm selectedAlgorithm = (IAlgorithm) lvAlgorithms.getSelectionModel().getSelectedItem();
-        NumberGenerator ng = NumberGenerator.getInstance();
+        DataGenerator ng = DataGenerator.getInstance();
+        TaskRunner tr = new TaskRunner();
+
         getInputRangeFromGUI(); //get user defined input
         pbProgress.setProgress(0.0);
 
@@ -160,19 +138,32 @@ public class MainWindowController implements Initializable {
             Thread t = new Thread(() -> {
 
                 for (int i = 0; i < inputRanges.size(); i++) {
+
+                    Comparable[] data = null;
                     final double value = (float) (i + 1) / (float) inputRanges.size();
+                    final int numberOfInputs = inputRanges.get(i);
+
+                    switch (selectedAlgorithm.getType()) {
+                        case SORTING:
+                            data = ng.generateRandomIntegers(inputRanges.get(i), 1);
+                            break;
+                        case SEARCHING:
+                            break;
+                        case MISC:
+                            data = new Integer[]{inputRanges.get(i)};
+                            break;
+                    }
                     
-                    if (selectedAlgorithm.getType() == AlgorithmType.SORTING)    
-                        runTask(selectedAlgorithm, ng.generateRandomNumbers(inputRanges.get(i), 1), series);
-                    else
-                        runTask(selectedAlgorithm, new int[]{inputRanges.get(i)}, series);
-                    
-                    
+                    final long durationInMillis = tr.runTask(selectedAlgorithm, data);                    
+
                     Platform.runLater(() -> {
+                        //series.getData().add(new XYChart.Data(numberOfInputs, durationInMillis));
+                        //create and setup XY plot
+                        XYChart.Data<Number, Number> xyPlot = new XYChart.Data(numberOfInputs, durationInMillis);
+                        xyPlot.setNode(new HoveredThresholdNode(numberOfInputs, durationInMillis)); //create tooltip in the chart
+                        series.getData().add(xyPlot);
                         pbProgress.setProgress(value);
                     });
-
-                    System.out.println(value);
                 }
             });
             t.start();

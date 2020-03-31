@@ -11,24 +11,30 @@ import java.util.Random;
  *
  * @author Søren Spangsberg
  */
-public class NumberGenerator {
+public class DataGenerator {
     
-    private static NumberGenerator _instance = null;
+    private static DataGenerator _instance = null;
     
     
-    private NumberGenerator() {
+    private DataGenerator() {
         
     }
     
-    public static NumberGenerator getInstance() {
+    public static DataGenerator getInstance() {
         if (_instance == null)
-            _instance = new NumberGenerator();
+            _instance = new DataGenerator();
         
         return _instance;
     }
     
-    public int[] generateRandomNumbers(int size, int multiplier) {
-        int[] randomNumbers = new int[size];
+    /**
+     * 
+     * @param size
+     * @param multiplier
+     * @return Array of Integers (Comparable)
+     */
+    public Comparable[] generateRandomIntegers(int size, int multiplier) {
+        Integer[] randomNumbers = new Integer[size];
         Random r = new Random();
 
         for (int i = 0; i < randomNumbers.length; i++) {
@@ -37,5 +43,4 @@ public class NumberGenerator {
         }
         return randomNumbers;
     }
-    
 }
