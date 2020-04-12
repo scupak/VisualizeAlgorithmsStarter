@@ -40,7 +40,7 @@ public class InsertionSort extends GenericAlgorithm {
             int holeIndex = i; // hole in the list
             
             //O(N^2)
-            while (holeIndex > 0 && data[holeIndex - 1].compareTo(tmp) == 1)
+            while (holeIndex > 0 && data[holeIndex - 1].compareTo(tmp) > 1)
             {
                 data[holeIndex] = data[holeIndex - 1];
                 holeIndex--;                

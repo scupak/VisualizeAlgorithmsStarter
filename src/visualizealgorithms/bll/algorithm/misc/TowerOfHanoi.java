@@ -21,7 +21,7 @@ public class TowerOfHanoi extends GenericAlgorithm {
     @Override
     public void doWork() {
         
-        int[] data = (int[]) super.getData();
+        Integer[] data = (Integer[]) super.getData();
         
         move(data[0],'A','B','C');
     }

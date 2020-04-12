@@ -145,7 +145,8 @@ public class MainWindowController implements Initializable {
 
                     switch (selectedAlgorithm.getType()) {
                         case SORTING:
-                            data = ng.generateRandomIntegers(inputRanges.get(i), 1);
+                            //data = ng.generateRandomIntegers(numberOfInputs, 1);
+                            data = ng.generateRandomBEs(numberOfInputs);
                             break;
                         case SEARCHING:
                             break;
