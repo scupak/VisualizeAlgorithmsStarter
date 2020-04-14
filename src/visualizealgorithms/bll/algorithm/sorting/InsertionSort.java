@@ -1,5 +1,6 @@
 package visualizealgorithms.bll.algorithm.sorting;
 
+import visualizealgorithms.bll.algorithm.AlgorithmType;
 import visualizealgorithms.bll.algorithm.GenericAlgorithm;
 
 /**
@@ -12,7 +13,7 @@ public class InsertionSort extends GenericAlgorithm {
      * Constructor that calls super class with basic info
      */
     public InsertionSort() {
-        super("InsertionSort", "Simple O(N^2) sorting algorithm");
+        super("InsertionSort", "Simple O(N^2) sorting algorithm", AlgorithmType.SORTING);
     }
 
     /**
@@ -21,21 +22,30 @@ public class InsertionSort extends GenericAlgorithm {
     @Override
     public void doWork() {
 
-        int[] arr = (int[]) super.getData();
-
+        Comparable[] data = (Comparable[]) super.getData(); 
+        
+        doInsertionSort(data);
+    }
+    
+    /**
+     * 
+     */
+    private void doInsertionSort(Comparable[] data) {
+        
         //algorithm implementation...
-        for (int i = 1; i < arr.length; i++) {
+        for (int i = 1; i < data.length; i++) {
             
-            int tmp = arr[i]; // move an element to a temporary location to create a
+            Comparable tmp = data[i];
+            //int tmp = arr[i]; // move an element to a temporary location to create a
             int holeIndex = i; // hole in the list
             
             //O(N^2)
-            while (holeIndex > 0 && arr[holeIndex - 1] > tmp) // move the hole to the correct position 
+            while (holeIndex > 0 && data[holeIndex - 1].compareTo(tmp) > 1)
             {
-                arr[holeIndex] = arr[holeIndex - 1];
-                holeIndex--;
+                data[holeIndex] = data[holeIndex - 1];
+                holeIndex--;                
             }
-            arr[holeIndex] = tmp; // insert the temporary element into the hole.
-        }
+            data[holeIndex] = tmp; // insert the temporary element into the hole.
+        } 
     }
 }
